@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta charset='utf-8' />
+<title>Downing Mountain Lodge Example</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body { margin:0; padding:0; }
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+    h2 {margin: 10px; font-size: 1.2em;}
+    h3 {margin: 10px;}
+    p {margin: 10px; padding: 0}
+    .map-overlay {position: absolute; bottom: 0; right: 0; background: rgba(255, 255, 255, 0.8); margin-right: 20px; font-family: Arial, sans-serif; overflow: auto; border-radius: 3px;}
+    #features {top: 0; height: 175px; margin-top: 10px; width: 430px;}
+    #legend {padding: 10px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); line-height: 18px; height: 75px; margin-bottom: 40px; width: 150px;}
+    .legend-key {display: inline-block; border-radius: 20%; width: 10px; height: 10px; margin-right: 5px;}
+  </style>
+</head>
+<body>
+
+<div id='map'></div>
+<div class='map-overlay' id='features'><h2>Downing Mountain Lodge Backcountry Routes</h2><div id='pd'>
+<p>Click on a route to view its properties.<br />
+   <br />
+   The map below displays an example interactive map of Downing Mountain Lodge backcountry routes. This is just an example of what your map could look like. </p></div></div>
+<div class='map-overlay' id='legend'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoidGFsdHl0b3BvIiwiYSI6ImNqbDZ1ZHJkcDAydmczcG51NWM1b2gwMzAifQ.Pk_hS4XNsiWeZ7tyMT8a9w';
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/taltytopo/cjmmfkjy59ecv2rscxz0qy81t',
+  center: [-114.25, 46.2349],
+  zoom: 12.75
+});
+
+map.on('click', 'downing-descent-ex-81oz34', function(e) {
+  new mapboxgl.Popup()
+    .setLngLat(e.lngLat)
+    .setHTML('<h3>' + e.features[0].properties.Name +
+             '</h3><p>' + '<b>' + "Distance to Top: " + '</b>' + e.features[0].properties.Dist_top_m + " miles" + '<br />' +
+             '<b>' + "Elevation Gain: " + '</b>' + e.features[0].properties.Elev_gain + " feet" + '<br />' +
+             '<b>' + "Skiable Vertical: " + '</b>' + e.features[0].properties.Ski_vert + " feet" + '<br />' +
+             '<b>' + "Max Slope Angle: " + '</b>' + e.features[0].properties.MAX_angle + " degrees" + '<br />' +
+             '<b>' + "Average Aspect: " + '</b>' + e.features[0].properties.AVG_direct + '<br />' +
+             '<b>' + "Tree Cover: " + '</b>' + e.features[0].properties.PCT_trees + "%" + '</p>')
+    .addTo(map);
+});
+
+map.on('load', function() {
+    var layers = ['Ascent Routes', 'Easier Runs', 'Difficult Runs', 'Advanced Runs'];
+    var colors = ['#cc57ce', '#2df807', '#02bafe', '#000000'];
+    for (i = 0; i < layers.length; i++) {
+      var layer = layers[i];
+      var color = colors[i];
+      var item = document.createElement('div');
+      var key = document.createElement('span');
+      key.className = 'legend-key';
+      key.style.backgroundColor = color;
+
+      var value = document.createElement('span');
+      value.innerHTML = layer;
+      item.appendChild(key);
+      item.appendChild(value);
+      legend.appendChild(item);}
+});
+
+map.touchZoomRotate.enable();
+
+map.getCanvas().style.cursor = 'default';
+
+var nav = new mapboxgl.NavigationControl();
+map.addControl(nav, 'top-left');
+
+</script>
+
+</body>
+</html>
